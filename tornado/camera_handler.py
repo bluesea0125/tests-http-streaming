@@ -14,12 +14,14 @@ def decimal_default(obj):
         return float(obj)
     raise TypeError
 
-from constants import sql_conf
-hisTable=sql_conf.get('objectdetection','camera0')
+from sql import query_all
+#from constants import sql_conf
+hisTable='t_objdet_camera0_his'#db_conf.get('objectdetection','camera0')
 class CAMERA_ObjectDetection(BaseHandler):
     def get(self):
         try:
-            sql = "INSERT INTO %s SET addr='%s', secret='%s';"%(hisTable,address,secret)
+            query = "SELECT * FROM %s WHERE frame_id=(SELECT MAX(frame_id) FROM %s);"%(hisTable,hisTable)
+            data = query_all(query)
             self.write(json.dumps(BaseHandler.success_ret_with_data(data), default=decimal_default))
         except Exception as e:
             self.write(json.dumps(BaseHandler.error_ret()))

@@ -6,14 +6,21 @@ Created on Mon Mar 19 20:47:10 2018
 @author: frank
 """
 
-HOST='127.0.0.1'
+# Host
+HTTP_IP_ADDR='127.0.0.1'
+HTTP_PORT=9092
+
+# MySQL
+HOST='localhost'
 USRNAME='root'
 PASSWD='root'
 DBNAME='stream'
 
+# Timer
 FPS = 10
-loop_time = 1000 / FPS
+loop_time = 1.0 / FPS
 
+# SQL
 import os
 root_path = os.path.dirname(os.path.abspath(__file__))
 

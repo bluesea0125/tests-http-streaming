@@ -43,20 +43,40 @@ def execute(query):
     cur = conn.cursor()
     cur.execute(query)
     close_db(conn)
+    
+def update(query,values):
+    conn = open_db()
+    cursor = conn.cursor()
+    cursor.execute(query,values)
+    conn.commit()
 ###############################################################################
-from constants import sql_conf
 
+from constants import sql_conf
 from argparse import ArgumentParser
 def main():
     parser  = ArgumentParser(description='Customized Handling.')
-    parser.add_argument("-m", "--mode", default= "pr", help="pr-show all")
+    parser.add_argument("-m", "--mode", default= "prt", help="prt-print all tables in the database")
     args = parser.parse_args()
-    if args.mode == 'pr':
-        query_all(query='show tables;')
-    elif args.mode == 'ct':
+    if args.mode == 'prt':
+        print('printing tables...')
+        print(query_all(query='show tables;'))
+    if args.mode == 'shw':
+        print('showing table...')
+        print(query_all(query='select * from t_objdet_camera0_his;'))
+    elif args.mode == 'crt':
         execute(sql_conf.get('objectdetection','camera0'))
-    elif args.mode == 'ct':
-        execute(sql_conf.get('objectdetection','camera0'))    
+    elif args.mode == 'add':
+        query="INSERT INTO `t_objdet_camera0_his`"\
+              "(`camera_id`, `frame_id`, `object_id`, "\
+              "`object_class`, `object_type`, `object_colr`, "\
+              "`vehicle_license`,"\
+              "`person_name`, `person_gender`, `person_age`, "\
+              "`left`, `top`, `width`, `height`, "\
+              "`create_time`, `status`) "\
+              "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        params=[0,1,4,2,'bus','green','B12345','jack',0,41,610,555,69,112,1531280759,2]
+        print(query,tuple(params))
+        update(query,tuple(params))
 
 if __name__ == "__main__":
     main()

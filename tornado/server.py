@@ -12,16 +12,17 @@ class MainHandler(BaseHandler):
 def make_app():
     application = tornado.web.Application([
         (r"/", MainHandler),
-        (r"/0/getjson", CAMERA_ObjectDetection),
+        (r"/0/objdet", CAMERA_ObjectDetection),
     ], debug = True
     )
     return application
 
+from constants import HTTP_PORT
 def main():
     print('tornado running...')
     app = make_app()
     http_server = tornado.httpserver.HTTPServer(app, decompress_request=True)
-    http_server.listen(9092)
+    http_server.listen(HTTP_PORT)
     http_server.start(1)
     tornado.ioloop.IOLoop.current().start()
 
